@@ -162,11 +162,18 @@
                             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
                                 <i class="fa-solid fa-boxes-stacked text-slate-400 mr-2"></i> Products
                             </h2>
-                            <span class="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full" x-text="items.length + ' line item(s)'"></span>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" @click="addItem()"
+                                        class="inline-flex items-center space-x-1 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-md shadow-sm transition">
+                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                    <span>Add Item</span>
+                                </button>
+                                <span class="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full" x-text="items.length + ' item(s)'"></span>
+                            </div>
                         </div>
 
                         <!-- Product Rows Table (Scrollable container with sticky header) -->
-                        <div class="overflow-x-auto max-h-[250px] overflow-y-auto border border-slate-200 rounded-lg custom-scrollbar">
+                        <div x-ref="tableContainer" class="overflow-x-auto max-h-[250px] overflow-y-auto border border-slate-200 rounded-lg custom-scrollbar">
                             <table class="w-full text-left text-sm relative">
                                 <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 shadow-sm">
                                     <tr class="text-xs uppercase text-slate-500 font-semibold">
@@ -179,7 +186,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-100 bg-white">
                                     <template x-for="(item, index) in items" :key="index">
-                                        <tr class="hover:bg-slate-50/80 transition">
+                                        <tr class="hover:bg-slate-50/80 transition" :class="index === 0 && !item.product_id ? 'bg-emerald-50/40' : ''">
                                             <!-- Product Select -->
                                             <td class="py-2.5 px-3">
                                                 <select x-model.number="item.product_id"
@@ -732,13 +739,25 @@
                 },
 
                 addItem() {
-                    this.items.push({
+                    // Prepend new product row to the top so it is immediately visible without scrolling
+                    this.items.unshift({
                         product_id: '',
                         product: null,
                         quantity: 1,
                         unit_price: 0,
                         tax_percentage: 0,
                         line_total: 0
+                    });
+
+                    // Scroll table container to top and focus the new product selector
+                    this.$nextTick(() => {
+                        if (this.$refs.tableContainer) {
+                            this.$refs.tableContainer.scrollTop = 0;
+                            const firstSelect = this.$refs.tableContainer.querySelector('select');
+                            if (firstSelect) {
+                                firstSelect.focus();
+                            }
+                        }
                     });
                 },
 
