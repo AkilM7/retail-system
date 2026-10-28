@@ -17,6 +17,22 @@
             #printable-receipt, #printable-receipt * { visibility: visible; }
             #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; }
         }
+        /* Custom smooth scrollbar for table and alert lists */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen font-sans" x-data="billingApp()" x-init="initApp()">
@@ -55,10 +71,10 @@
     </header>
 
     <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
 
         <!-- TAB 1: POS BILLING SCREEN (MATCHES WIREFRAME) -->
-        <div x-show="activeTab === 'pos'" class="space-y-6">
+        <div x-show="activeTab === 'pos'" class="space-y-3.5">
 
             <!-- Toast / Notification banner -->
             <div x-show="alertMessage" x-cloak class="p-4 rounded-xl flex items-center justify-between shadow-sm transition"
@@ -72,13 +88,13 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
                 <!-- Left 2 Columns: Customer, Products, and Payment -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-2 space-y-3.5">
 
                     <!-- Customer Section -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
                             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
                                 <i class="fa-solid fa-user-tag text-slate-400 mr-2"></i> Customer Details
@@ -141,7 +157,7 @@
                     </div>
 
                     <!-- Products Table Section (Exact Wireframe layout) -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
                             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
                                 <i class="fa-solid fa-boxes-stacked text-slate-400 mr-2"></i> Products
@@ -149,19 +165,19 @@
                             <span class="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full" x-text="items.length + ' line item(s)'"></span>
                         </div>
 
-                        <!-- Product Rows Table -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead>
-                                    <tr class="text-xs uppercase text-slate-500 border-b border-slate-200 bg-slate-50/70">
-                                        <th class="py-2.5 px-3">Product</th>
-                                        <th class="py-2.5 px-3 text-center w-24">Qty</th>
-                                        <th class="py-2.5 px-3 text-right w-24">Price</th>
-                                        <th class="py-2.5 px-3 text-right w-28">Line Total</th>
-                                        <th class="py-2.5 px-3 text-center w-12"></th>
+                        <!-- Product Rows Table (Scrollable container with sticky header) -->
+                        <div class="overflow-x-auto max-h-[250px] overflow-y-auto border border-slate-200 rounded-lg custom-scrollbar">
+                            <table class="w-full text-left text-sm relative">
+                                <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 shadow-sm">
+                                    <tr class="text-xs uppercase text-slate-500 font-semibold">
+                                        <th class="py-2.5 px-3 bg-slate-50">Product</th>
+                                        <th class="py-2.5 px-3 text-center w-24 bg-slate-50">Qty</th>
+                                        <th class="py-2.5 px-3 text-right w-24 bg-slate-50">Price</th>
+                                        <th class="py-2.5 px-3 text-right w-28 bg-slate-50">Line Total</th>
+                                        <th class="py-2.5 px-3 text-center w-12 bg-slate-50"></th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-100">
+                                <tbody class="divide-y divide-slate-100 bg-white">
                                     <template x-for="(item, index) in items" :key="index">
                                         <tr class="hover:bg-slate-50/80 transition">
                                             <!-- Product Select -->
@@ -235,7 +251,7 @@
                     </div>
 
                     <!-- Payment Section (Exact Wireframe layout) -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
                             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
                                 <i class="fa-solid fa-credit-card text-slate-400 mr-2"></i> Payment & Billing
@@ -316,10 +332,10 @@
                 </div>
 
                 <!-- Right 1 Column: Low Stock Alert & System Overview -->
-                <div class="space-y-6">
+                <div class="space-y-3.5">
 
                     <!-- Low Stock Alert Card (Exact Wireframe layout) -->
-                    <div class="bg-amber-50/70 border-2 border-amber-300 rounded-xl p-5 shadow-sm">
+                    <div class="bg-amber-50/70 border-2 border-amber-300 rounded-xl p-4 shadow-sm">
                         <div class="flex items-center justify-between mb-3 border-b border-amber-200 pb-2">
                             <h2 class="text-sm font-bold text-amber-950 flex items-center gap-2">
                                 <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Low Stock Alert
@@ -334,7 +350,7 @@
                             </div>
                         </div>
 
-                        <ul class="space-y-2 text-sm text-slate-800">
+                        <ul class="space-y-2 text-sm text-slate-800 max-h-[190px] overflow-y-auto custom-scrollbar pr-1">
                             <template x-for="p in lowStockProducts" :key="p.id">
                                 <li class="flex items-center justify-between py-1 border-b border-amber-100 last:border-0">
                                     <span class="font-medium text-slate-900 flex items-center gap-1.5">
@@ -363,7 +379,7 @@
                     </div>
 
                     <!-- Quick System Specs Card -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-2.5">
                         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                             <i class="fa-solid fa-list-check text-slate-400"></i> Assessment Checklist
                         </h3>
