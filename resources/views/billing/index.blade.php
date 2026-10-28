@@ -186,7 +186,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-100 bg-white">
                                     <template x-for="(item, index) in items" :key="index">
-                                        <tr class="hover:bg-slate-50/80 transition" :class="index === 0 && !item.product_id ? 'bg-emerald-50/40' : ''">
+                                        <tr class="hover:bg-slate-50/80 transition">
                                             <!-- Product Select -->
                                             <td class="py-2.5 px-3">
                                                 <select x-model.number="item.product_id"
@@ -739,8 +739,8 @@
                 },
 
                 addItem() {
-                    // Prepend new product row to the top so it is immediately visible without scrolling
-                    this.items.unshift({
+                    // Append new product row to the bottom (natural list growth)
+                    this.items.push({
                         product_id: '',
                         product: null,
                         quantity: 1,
@@ -749,13 +749,13 @@
                         line_total: 0
                     });
 
-                    // Scroll table container to top and focus the new product selector
+                    // Scroll table container to bottom so the new row is visible, then focus its select
                     this.$nextTick(() => {
                         if (this.$refs.tableContainer) {
-                            this.$refs.tableContainer.scrollTop = 0;
-                            const firstSelect = this.$refs.tableContainer.querySelector('select');
-                            if (firstSelect) {
-                                firstSelect.focus();
+                            this.$refs.tableContainer.scrollTop = this.$refs.tableContainer.scrollHeight;
+                            const selects = this.$refs.tableContainer.querySelectorAll('select');
+                            if (selects.length) {
+                                selects[selects.length - 1].focus();
                             }
                         }
                     });
@@ -781,6 +781,20 @@
                         item.tax_percentage = 0;
                     }
                     this.recalculate();
+
+                    // Auto-focus the Qty input of this row after a product is selected
+                    if (found) {
+                        this.$nextTick(() => {
+                            const rows = this.$refs.tableContainer.querySelectorAll('tbody tr');
+                            if (rows[index]) {
+                                const qtyInput = rows[index].querySelector('input[type="number"]');
+                                if (qtyInput) {
+                                    qtyInput.focus();
+                                    qtyInput.select();
+                                }
+                            }
+                        });
+                    }
                 },
 
                 recalculate() {
