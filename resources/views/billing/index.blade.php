@@ -6,6 +6,8 @@
     <title>Store Billing — New Order | Mallow Technologies Assignment</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
     <style>
@@ -23,13 +25,15 @@
     <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center font-bold text-slate-900 text-lg shadow-sm">
-                    ₹
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-slate-950 text-lg shadow-sm">
+                    <i class="fa-solid fa-cash-register"></i>
                 </div>
                 <div>
                     <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
                         Store Billing — New Order
-                        <span class="text-xs font-normal bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">WIREFRAME REFERENCE IMPLEMENTATION</span>
+                        <span class="text-[11px] font-normal bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">
+                            <i class="fa-solid fa-layer-group text-slate-400 mr-1"></i> WIREFRAME REFERENCE
+                        </span>
                     </h1>
                     <p class="text-xs text-slate-400">Mallow Technologies • Retail Order & Inventory Mini-System</p>
                 </div>
@@ -37,14 +41,14 @@
 
             <!-- Quick Navigation Pills -->
             <div class="flex items-center space-x-2 text-xs">
-                <button @click="activeTab = 'pos'" :class="activeTab === 'pos' ? 'bg-emerald-600 text-white font-medium' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-md transition">
-                    🛒 POS Billing
+                <button @click="activeTab = 'pos'" :class="activeTab === 'pos' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                    <i class="fa-solid fa-cart-shopping mr-1.5"></i> POS Billing
                 </button>
-                <button @click="activeTab = 'history'" :class="activeTab === 'history' ? 'bg-emerald-600 text-white font-medium' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-md transition">
-                    📜 Customer History API
+                <button @click="activeTab = 'history'" :class="activeTab === 'history' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                    <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Customer History API
                 </button>
-                <button @click="activeTab = 'concurrency'" :class="activeTab === 'concurrency' ? 'bg-emerald-600 text-white font-medium' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-md transition">
-                    ⚡ Concurrency Tester (Req #7)
+                <button @click="activeTab = 'concurrency'" :class="activeTab === 'concurrency' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                    <i class="fa-solid fa-bolt mr-1.5"></i> Concurrency Tester (Req #7)
                 </button>
             </div>
         </div>
@@ -57,13 +61,15 @@
         <div x-show="activeTab === 'pos'" class="space-y-6">
 
             <!-- Toast / Notification banner -->
-            <div x-show="alertMessage" x-cloak class="p-4 rounded-lg flex items-center justify-between"
+            <div x-show="alertMessage" x-cloak class="p-4 rounded-xl flex items-center justify-between shadow-sm transition"
                  :class="alertType === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-rose-50 border border-rose-200 text-rose-800'">
                 <div class="flex items-center space-x-2">
-                    <span x-text="alertType === 'success' ? '✅' : '⚠️'"></span>
+                    <i :class="alertType === 'success' ? 'fa-solid fa-circle-check text-emerald-600 text-base' : 'fa-solid fa-triangle-exclamation text-rose-600 text-base'"></i>
                     <span class="text-sm font-medium" x-text="alertMessage"></span>
                 </div>
-                <button @click="alertMessage = ''" class="text-slate-400 hover:text-slate-600 font-bold">&times;</button>
+                <button @click="alertMessage = ''" class="text-slate-400 hover:text-slate-600 font-bold px-2 py-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -74,10 +80,14 @@
                     <!-- Customer Section -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Customer Details</h2>
-                            <span x-show="customerStatus" class="text-xs px-2 py-0.5 rounded-full font-medium"
-                                  :class="customerFound ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'"
-                                  x-text="customerStatus"></span>
+                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
+                                <i class="fa-solid fa-user-tag text-slate-400 mr-2"></i> Customer Details
+                            </h2>
+                            <span x-show="customerStatus" class="text-xs px-2.5 py-0.5 rounded-full font-medium flex items-center"
+                                  :class="customerFound ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'">
+                                <i :class="customerFound ? 'fa-solid fa-circle-check mr-1 text-emerald-600' : 'fa-solid fa-user-plus mr-1 text-slate-400'"></i>
+                                <span x-text="customerStatus"></span>
+                            </span>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -86,19 +96,25 @@
                                     Customer Email <span class="text-rose-500">*</span>
                                 </label>
                                 <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                        <i class="fa-regular fa-envelope"></i>
+                                    </div>
                                     <input type="email"
                                            x-model="customer.email"
                                            @blur="lookupCustomer()"
                                            @keydown.enter.prevent="lookupCustomer()"
                                            placeholder="e.g. thomas@example.com"
-                                           class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                                           class="w-full pl-8 pr-20 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                                            :class="errors['customer.email'] ? 'border-rose-400 bg-rose-50' : 'border-slate-300'">
                                     <button type="button" @click="lookupCustomer()"
-                                            class="absolute right-2 top-2 text-xs bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-600 border border-slate-300">
-                                        Lookup
+                                            class="absolute right-1.5 top-1.5 text-xs bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-md text-slate-700 border border-slate-300 flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Lookup
                                     </button>
                                 </div>
-                                <p x-show="errors['customer.email']" class="text-xs text-rose-500 mt-1" x-text="errors['customer.email']"></p>
+                                <p x-show="errors['customer.email']" class="text-xs text-rose-500 mt-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-exclamation text-[11px]"></i>
+                                    <span x-text="errors['customer.email']"></span>
+                                </p>
                                 <p class="text-[11px] text-slate-400 mt-1">Try: <code>thomas@example.com</code> or <code>akilmurugan2002@gmail.com</code></p>
                             </div>
 
@@ -106,12 +122,20 @@
                                 <label class="block text-xs font-semibold text-slate-700 mb-1">
                                     Customer Name <span class="text-rose-500">*</span>
                                 </label>
-                                <input type="text"
-                                       x-model="customer.name"
-                                       placeholder="auto-filled if email exists"
-                                       class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                                       :class="errors['customer.name'] ? 'border-rose-400 bg-rose-50' : 'border-slate-300'">
-                                <p x-show="errors['customer.name']" class="text-xs text-rose-500 mt-1" x-text="errors['customer.name']"></p>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                        <i class="fa-regular fa-user"></i>
+                                    </div>
+                                    <input type="text"
+                                           x-model="customer.name"
+                                           placeholder="auto-filled if email exists"
+                                           class="w-full pl-8 pr-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                                           :class="errors['customer.name'] ? 'border-rose-400 bg-rose-50' : 'border-slate-300'">
+                                </div>
+                                <p x-show="errors['customer.name']" class="text-xs text-rose-500 mt-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-exclamation text-[11px]"></i>
+                                    <span x-text="errors['customer.name']"></span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -119,15 +143,17 @@
                     <!-- Products Table Section (Exact Wireframe layout) -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Products</h2>
-                            <span class="text-xs text-slate-400" x-text="items.length + ' line item(s)'"></span>
+                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
+                                <i class="fa-solid fa-boxes-stacked text-slate-400 mr-2"></i> Products
+                            </h2>
+                            <span class="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full" x-text="items.length + ' line item(s)'"></span>
                         </div>
 
                         <!-- Product Rows Table -->
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
                                 <thead>
-                                    <tr class="text-xs uppercase text-slate-400 border-b border-slate-200 bg-slate-50">
+                                    <tr class="text-xs uppercase text-slate-500 border-b border-slate-200 bg-slate-50/70">
                                         <th class="py-2.5 px-3">Product</th>
                                         <th class="py-2.5 px-3 text-center w-24">Qty</th>
                                         <th class="py-2.5 px-3 text-right w-24">Price</th>
@@ -137,12 +163,12 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
                                     <template x-for="(item, index) in items" :key="index">
-                                        <tr class="hover:bg-slate-50">
+                                        <tr class="hover:bg-slate-50/80 transition">
                                             <!-- Product Select -->
                                             <td class="py-2.5 px-3">
                                                 <select x-model.number="item.product_id"
                                                         @change="onProductChange(index)"
-                                                        class="w-full px-2.5 py-1.5 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                                        class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                                     <option value="">-- select product --</option>
                                                     <template x-for="p in catalog" :key="p.id">
                                                         <option :value="p.id"
@@ -150,8 +176,9 @@
                                                                 x-text="p.name + ' (' + p.code + ') — ₹' + Number(p.price).toFixed(2) + ' (Stock: ' + p.stock + ')'"></option>
                                                     </template>
                                                 </select>
-                                                <div x-show="item.product && item.product.stock <= 5" class="text-[11px] text-amber-600 mt-0.5">
-                                                    ⚠️ Only <span x-text="item.product.stock"></span> left in stock!
+                                                <div x-show="item.product && item.product.stock <= 5" class="text-[11px] text-amber-700 mt-1 flex items-center gap-1 font-medium">
+                                                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+                                                    <span>Only <strong x-text="item.product.stock"></strong> left in stock!</span>
                                                 </div>
                                             </td>
 
@@ -160,7 +187,7 @@
                                                 <input type="number" min="1"
                                                        x-model.number="item.quantity"
                                                        @input="recalculate()"
-                                                       class="w-20 px-2 py-1.5 border border-slate-300 rounded text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                                       class="w-20 px-2 py-1.5 border border-slate-300 rounded-lg text-center text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                             </td>
 
                                             <!-- Unit Price Readonly -->
@@ -180,8 +207,9 @@
                                             <td class="py-2.5 px-3 text-center">
                                                 <button type="button" @click="removeItem(index)"
                                                         :disabled="items.length === 1"
-                                                        class="text-slate-400 hover:text-rose-500 disabled:opacity-30 disabled:hover:text-slate-400 p-1">
-                                                    🗑️
+                                                        title="Remove product"
+                                                        class="text-slate-400 hover:text-rose-600 disabled:opacity-20 disabled:hover:text-slate-400 p-1.5 rounded transition">
+                                                    <i class="fa-regular fa-trash-can text-sm"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -191,15 +219,17 @@
                         </div>
 
                         <!-- Add Product Row Button -->
-                        <div class="mt-4 flex justify-between items-center">
+                        <div class="mt-4 flex flex-wrap justify-between items-center gap-2">
                             <button type="button" @click="addItem()"
-                                    class="inline-flex items-center space-x-1 text-xs font-semibold bg-slate-900 text-white px-3.5 py-2 rounded-lg hover:bg-slate-800 shadow-sm transition">
-                                <span>+ Add Product</span>
+                                    class="inline-flex items-center space-x-1.5 text-xs font-semibold bg-slate-900 text-white px-3.5 py-2 rounded-lg hover:bg-slate-800 shadow-sm transition">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add Product</span>
                             </button>
 
                             <button type="button" @click="loadWireframeExample()"
-                                    class="text-xs text-blue-600 hover:underline">
-                                ⚡ Fill Wireframe Sample (Colgate + Parle-G)
+                                    class="inline-flex items-center space-x-1.5 text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Fill Wireframe Sample (Colgate + Parle-G)</span>
                             </button>
                         </div>
                     </div>
@@ -207,7 +237,9 @@
                     <!-- Payment Section (Exact Wireframe layout) -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                         <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Payment & Billing</h2>
+                            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-600 flex items-center">
+                                <i class="fa-solid fa-credit-card text-slate-400 mr-2"></i> Payment & Billing
+                            </h2>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
@@ -226,7 +258,7 @@
 
                                 <div class="flex justify-between items-center text-base pt-2 border-t border-slate-200 font-bold">
                                     <span class="text-slate-900">Grand Total</span>
-                                    <span class="text-emerald-700 text-lg" x-text="'₹' + totals.grandTotal.toFixed(2)"></span>
+                                    <span class="text-emerald-700 text-lg font-extrabold" x-text="'₹' + totals.grandTotal.toFixed(2)"></span>
                                 </div>
 
                                 <!-- Amount Given by Customer -->
@@ -234,40 +266,49 @@
                                     <label class="block text-xs font-semibold text-slate-700 mb-1">
                                         Amount Given by Customer (₹)
                                     </label>
-                                    <input type="number" step="0.5"
-                                           x-model.number="payment.amountGiven"
-                                           @input="calculateChange()"
-                                           placeholder="e.g. 250"
-                                           class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                                        </div>
+                                        <input type="number" step="0.5"
+                                               x-model.number="payment.amountGiven"
+                                               @input="calculateChange()"
+                                               placeholder="e.g. 250"
+                                               class="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                    </div>
                                 </div>
 
                                 <!-- Balance to Return (with denomination breakdown) -->
-                                <div class="p-3 bg-slate-50 rounded-lg border border-slate-200" x-show="totals.grandTotal > 0">
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200" x-show="totals.grandTotal > 0">
                                     <div class="flex justify-between text-sm font-semibold text-slate-800">
                                         <span>Balance to Return:</span>
-                                        <span :class="payment.balance >= 0 ? 'text-emerald-700' : 'text-rose-600'"
+                                        <span :class="payment.balance >= 0 ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'"
                                               x-text="'₹' + Math.max(0, payment.balance).toFixed(2)"></span>
                                     </div>
-                                    <div x-show="payment.denominations && payment.balance > 0" class="mt-1 text-xs text-slate-600 font-mono">
-                                        ↳ <span x-text="payment.denominations"></span>
+                                    <div x-show="payment.denominations && payment.balance > 0" class="mt-1 text-xs text-slate-600 font-mono flex items-center gap-1.5">
+                                        <i class="fa-solid fa-money-bill-wave text-emerald-600 text-xs"></i>
+                                        <span x-text="payment.denominations"></span>
                                     </div>
-                                    <div x-show="payment.amountGiven > 0 && payment.amountGiven < totals.grandTotal" class="mt-1 text-xs text-rose-500">
-                                        ⚠️ ₹<span x-text="(totals.grandTotal - payment.amountGiven).toFixed(2)"></span> remaining to collect.
+                                    <div x-show="payment.amountGiven > 0 && payment.amountGiven < totals.grandTotal" class="mt-1 text-xs text-rose-600 font-medium flex items-center gap-1">
+                                        <i class="fa-solid fa-triangle-exclamation text-xs"></i>
+                                        <span>₹<span x-text="(totals.grandTotal - payment.amountGiven).toFixed(2)"></span> remaining to collect.</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Right: Generate Bill Button & Action notes -->
-                            <div class="flex flex-col justify-center items-center h-full space-y-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                            <div class="flex flex-col justify-center items-center h-full space-y-3 p-5 bg-emerald-50/60 rounded-xl border border-emerald-100">
                                 <button type="button"
                                         @click="generateBill()"
                                         :disabled="isSubmitting || items.length === 0 || totals.grandTotal <= 0"
                                         class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition transform active:scale-95 flex items-center justify-center space-x-2">
-                                    <span x-show="isSubmitting" class="animate-spin text-lg">⏳</span>
+                                    <i x-show="!isSubmitting" class="fa-solid fa-file-invoice-dollar text-lg"></i>
+                                    <i x-show="isSubmitting" class="fa-solid fa-circle-notch fa-spin text-lg"></i>
                                     <span x-text="isSubmitting ? 'Processing Order...' : 'Generate Bill'"></span>
                                 </button>
-                                <p class="text-[11px] text-center text-slate-500">
-                                    ✨ Shows bill on page + queues email order confirmation job to customer
+                                <p class="text-[11px] text-center text-slate-500 leading-relaxed flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-paper-plane text-emerald-600"></i>
+                                    <span>Generates bill + dispatches asynchronous email job</span>
                                 </p>
                             </div>
                         </div>
@@ -280,12 +321,12 @@
                     <!-- Low Stock Alert Card (Exact Wireframe layout) -->
                     <div class="bg-amber-50/70 border-2 border-amber-300 rounded-xl p-5 shadow-sm">
                         <div class="flex items-center justify-between mb-3 border-b border-amber-200 pb-2">
-                            <h2 class="text-sm font-bold text-amber-900 flex items-center gap-1.5">
-                                <span>⚠️</span> Low Stock Alert
+                            <h2 class="text-sm font-bold text-amber-950 flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Low Stock Alert
                             </h2>
-                            <div class="flex items-center space-x-1">
-                                <span class="text-[10px] text-amber-800">Threshold:</span>
-                                <select x-model.number="lowStockThreshold" @change="fetchLowStock()" class="text-xs bg-white border border-amber-300 rounded px-1 py-0.5">
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-[10px] text-amber-900 font-semibold">Threshold:</span>
+                                <select x-model.number="lowStockThreshold" @change="fetchLowStock()" class="text-xs bg-white border border-amber-300 rounded-md px-1.5 py-0.5 font-medium text-slate-800">
                                     <option value="5">≤ 5</option>
                                     <option value="10">≤ 10</option>
                                     <option value="15">≤ 15</option>
@@ -296,53 +337,63 @@
                         <ul class="space-y-2 text-sm text-slate-800">
                             <template x-for="p in lowStockProducts" :key="p.id">
                                 <li class="flex items-center justify-between py-1 border-b border-amber-100 last:border-0">
-                                    <span class="font-medium text-slate-900" x-text="'• ' + p.name"></span>
+                                    <span class="font-medium text-slate-900 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-box text-amber-600 text-[11px]"></i>
+                                        <span x-text="p.name"></span>
+                                    </span>
                                     <span class="text-xs px-2 py-0.5 rounded-full font-bold"
-                                          :class="p.stock === 0 ? 'bg-rose-200 text-rose-900' : 'bg-amber-200 text-amber-900'"
+                                          :class="p.stock === 0 ? 'bg-rose-200 text-rose-900' : 'bg-amber-200 text-amber-950'"
                                           x-text="p.stock + ' units left'"></span>
                                 </li>
                             </template>
-                            <li x-show="lowStockProducts.length === 0" class="text-xs text-amber-700 italic py-2">
-                                All items sufficiently stocked!
+                            <li x-show="lowStockProducts.length === 0" class="text-xs text-amber-800 italic py-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-check text-emerald-600"></i>
+                                <span>All items sufficiently stocked!</span>
                             </li>
                         </ul>
 
-                        <div class="mt-3 pt-2 border-t border-amber-200 flex justify-between items-center text-[11px] text-amber-800">
-                            <span>Live endpoint: <code>/api/products/low-stock</code></span>
-                            <button @click="fetchLowStock()" class="hover:underline font-semibold">🔄 Refresh</button>
+                        <div class="mt-3 pt-2.5 border-t border-amber-200 flex justify-between items-center text-[11px] text-amber-900">
+                            <span class="flex items-center gap-1 font-mono">
+                                <i class="fa-solid fa-network-wired text-amber-700"></i> /api/products/low-stock
+                            </span>
+                            <button @click="fetchLowStock()" class="hover:underline font-bold text-amber-950 flex items-center gap-1">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Refresh
+                            </button>
                         </div>
                     </div>
 
                     <!-- Quick System Specs Card -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Mallow Requirements Checklist</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-slate-400"></i> Assessment Checklist
+                        </h3>
                         <ul class="text-xs space-y-2 text-slate-600">
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>Normalized Schema (Migrations)</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>POST /api/orders (Stock check, deduct, tax)</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>GET /api/customers/{email}/orders</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>GET /api/products/low-stock</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>Queued Job: <code>SendOrderConfirmationJob</code></span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>Pessimistic Locking Concurrency Safe</span>
                             </li>
                             <li class="flex items-center gap-2">
-                                <span class="text-emerald-500 font-bold">✓</span>
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
                                 <span>Automated PHPUnit Feature/Unit Tests</span>
                             </li>
                         </ul>
@@ -356,42 +407,57 @@
         <div x-show="activeTab === 'history'" x-cloak class="space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                 <div class="max-w-2xl">
-                    <h2 class="text-base font-bold text-slate-900 mb-1">Customer Order History (Requirement #3)</h2>
+                    <h2 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-slate-600"></i> Customer Order History (Requirement #3)
+                    </h2>
                     <p class="text-xs text-slate-500 mb-4">
                         Search customer orders by email address to fetch item breakdowns and historical purchases.
                     </p>
                     <div class="flex gap-2">
-                        <input type="email" x-model="historySearchEmail" placeholder="e.g. thomas@example.com"
-                               class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <input type="email" x-model="historySearchEmail" placeholder="e.g. thomas@example.com"
+                                   @keydown.enter.prevent="fetchOrderHistory()"
+                                   class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
                         <button type="button" @click="fetchOrderHistory()"
-                                class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800">
-                            Search Orders
+                                class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            <span>Search Orders</span>
                         </button>
                     </div>
                 </div>
 
                 <div x-show="historyLoading" class="py-8 text-center text-sm text-slate-500">
-                    <span class="animate-spin inline-block mr-2">⏳</span> Loading customer orders...
+                    <i class="fa-solid fa-circle-notch fa-spin text-emerald-600 mr-2 text-base"></i> Loading customer orders...
                 </div>
 
-                <div x-show="historyError" class="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700" x-text="historyError"></div>
+                <div x-show="historyError" class="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
+                    <span x-text="historyError"></span>
+                </div>
 
-                <div x-show="historyData && !historyLoading" class="mt-6 space-y-4">
+                <div x-show="historyOrders && historyOrders.length > 0 && !historyLoading" class="mt-6 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
-                            <h3 class="font-bold text-slate-900" x-text="historyCustomer ? historyCustomer.name : ''"></h3>
+                            <h3 class="font-bold text-slate-900 flex items-center gap-1.5" x-text="historyCustomer ? historyCustomer.name : ''"></h3>
                             <p class="text-xs text-slate-500" x-text="historyCustomer ? historyCustomer.email : ''"></p>
                         </div>
-                        <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-medium"
+                        <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-semibold"
                               x-text="(historyOrders ? historyOrders.length : 0) + ' Total Orders'"></span>
                     </div>
 
                     <template x-for="order in historyOrders" :key="order.id">
-                        <div class="border border-slate-200 rounded-lg p-4 bg-slate-50/50">
+                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 hover:bg-slate-50 transition">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
-                                    <span class="font-bold text-slate-900 text-sm" x-text="order.order_number"></span>
-                                    <span class="text-xs text-slate-400 block" x-text="new Date(order.created_at).toLocaleString()"></span>
+                                    <span class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                                        <i class="fa-solid fa-receipt text-slate-400"></i>
+                                        <span x-text="order.order_number"></span>
+                                    </span>
+                                    <span class="text-xs text-slate-400 block mt-0.5" x-text="new Date(order.created_at).toLocaleString()"></span>
                                 </div>
                                 <div class="text-right">
                                     <span class="font-bold text-emerald-700 text-base" x-text="'₹' + Number(order.grand_total).toFixed(2)"></span>
@@ -403,20 +469,23 @@
                             <div class="mt-2 text-xs border-t border-slate-200 pt-2">
                                 <table class="w-full text-slate-700">
                                     <thead>
-                                        <tr class="text-slate-400">
-                                            <th class="text-left font-normal">Item</th>
-                                            <th class="text-center font-normal">Qty</th>
-                                            <th class="text-right font-normal">Price</th>
-                                            <th class="text-right font-normal">Total</th>
+                                        <tr class="text-slate-400 font-semibold text-[11px]">
+                                            <th class="text-left font-medium">Item</th>
+                                            <th class="text-center font-medium">Qty</th>
+                                            <th class="text-right font-medium">Price</th>
+                                            <th class="text-right font-medium">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <template x-for="line in order.items" :key="line.id">
                                             <tr>
-                                                <td class="py-0.5" x-text="line.product_name + ' (' + line.product_code + ')'"></td>
-                                                <td class="text-center py-0.5" x-text="line.quantity"></td>
-                                                <td class="text-right py-0.5" x-text="'₹' + Number(line.unit_price).toFixed(2)"></td>
-                                                <td class="text-right py-0.5 font-medium" x-text="'₹' + Number(line.line_total).toFixed(2)"></td>
+                                                <td class="py-1 flex items-center gap-1">
+                                                    <i class="fa-solid fa-box text-slate-400 text-[10px]"></i>
+                                                    <span x-text="line.product_name + ' (' + line.product_code + ')'"></span>
+                                                </td>
+                                                <td class="text-center py-1" x-text="line.quantity"></td>
+                                                <td class="text-right py-1" x-text="'₹' + Number(line.unit_price).toFixed(2)"></td>
+                                                <td class="text-right py-1 font-semibold text-slate-900" x-text="'₹' + Number(line.line_total).toFixed(2)"></td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -431,42 +500,50 @@
         <!-- TAB 3: CONCURRENCY TESTER (REQUIREMENT #7 DEMO) -->
         <div x-show="activeTab === 'concurrency'" x-cloak class="space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-3xl">
-                <h2 class="text-base font-bold text-slate-900 mb-1">Requirement #7: Concurrency Safety Demo</h2>
+                <h2 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-purple-600"></i> Requirement #7: Concurrency Safety Demo
+                </h2>
                 <p class="text-xs text-slate-600 mb-4 leading-relaxed">
                     Brief: <em>"Ensure the stock check-and-deduct step is safe under concurrent requests — if two orders for the same product arrive at nearly the same time and only one unit is left, exactly one should succeed and the other should fail cleanly (no overselling)."</em>
                 </p>
 
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg space-y-3">
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="font-bold text-slate-800 text-sm">Target Product: Basmati Rice 1kg (RCE-101)</div>
-                            <div class="text-xs text-slate-500">Current Stock in Database:
+                            <div class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-shield-halved text-purple-600"></i> Target Product: Basmati Rice 1kg (RCE-101)
+                            </div>
+                            <div class="text-xs text-slate-500 mt-0.5">Current Stock in Database:
                                 <span class="font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900" x-text="getRiceStock() + ' units left'"></span>
                             </div>
                         </div>
-                        <button type="button" @click="resetRiceStock()" class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded text-slate-700">
-                            Reset Stock to 1
+                        <button type="button" @click="resetRiceStock()" class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-lg text-slate-700 font-semibold flex items-center gap-1 transition">
+                            <i class="fa-solid fa-rotate-left text-[11px]"></i> Reset Stock to 1
                         </button>
                     </div>
 
                     <button type="button" @click="runConcurrentRaceTest()"
                             :disabled="concurrencyRunning"
-                            class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-sm transition flex items-center justify-center space-x-2">
-                        <span x-show="concurrencyRunning" class="animate-spin">⏳</span>
+                            class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-sm transition flex items-center justify-center space-x-2 shadow-sm">
+                        <i x-show="!concurrencyRunning" class="fa-solid fa-bolt-lightning"></i>
+                        <i x-show="concurrencyRunning" class="fa-solid fa-circle-notch fa-spin"></i>
                         <span>Fire 2 Simultaneous Orders for the Last Unit (Promise.all)</span>
                     </button>
                 </div>
 
                 <!-- Concurrency Test Results -->
-                <div x-show="concurrencyResults" class="mt-4 p-4 border rounded-lg"
+                <div x-show="concurrencyResults" class="mt-4 p-4 border rounded-xl"
                      :class="concurrencyResults && concurrencyResults.safe ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'">
-                    <h4 class="font-bold text-sm text-slate-900 mb-2">Race Condition Test Output:</h4>
+                    <h4 class="font-bold text-sm text-slate-900 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-terminal text-slate-600"></i> Race Condition Test Output:
+                    </h4>
                     <div class="space-y-2 text-xs font-mono">
-                        <div class="p-2 rounded bg-white border border-slate-200" x-html="concurrencyResults ? concurrencyResults.req1 : ''"></div>
-                        <div class="p-2 rounded bg-white border border-slate-200" x-html="concurrencyResults ? concurrencyResults.req2 : ''"></div>
+                        <div class="p-2.5 rounded-lg bg-white border border-slate-200" x-html="concurrencyResults ? concurrencyResults.req1 : ''"></div>
+                        <div class="p-2.5 rounded-lg bg-white border border-slate-200" x-html="concurrencyResults ? concurrencyResults.req2 : ''"></div>
                     </div>
-                    <div class="mt-3 text-xs font-bold text-emerald-800" x-show="concurrencyResults && concurrencyResults.safe">
-                        🎉 RESULT: Exactly ONE order succeeded with 201 Created. The second order failed cleanly with 422 Unprocessable Entity (INSUFFICIENT_STOCK). Zero overselling occurred!
+                    <div class="mt-3 text-xs font-bold text-emerald-800 flex items-center gap-2" x-show="concurrencyResults && concurrencyResults.safe">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                        <span>RESULT: Exactly ONE order succeeded with 201 Created. The second order failed cleanly with 422 Unprocessable Entity (INSUFFICIENT_STOCK). Zero overselling occurred!</span>
                     </div>
                 </div>
             </div>
@@ -482,9 +559,12 @@
             <div id="printable-receipt">
                 <!-- Header -->
                 <div class="text-center border-b border-slate-200 pb-4 mb-4">
-                    <span class="text-2xl font-bold tracking-tight text-slate-900">RETAIL STORE RECEIPT</span>
+                    <span class="text-xl font-bold tracking-tight text-slate-900 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-store text-emerald-600"></i> RETAIL STORE RECEIPT
+                    </span>
                     <p class="text-xs text-slate-500 mt-0.5">Mallow Technologies Store Billing System</p>
-                    <div class="mt-2 text-xs font-mono text-slate-600 bg-slate-100 py-1 px-3 rounded-full inline-block">
+                    <div class="mt-2 text-xs font-mono text-slate-700 bg-slate-100 py-1 px-3 rounded-full inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-receipt text-slate-500"></i>
                         Order #<span class="font-bold text-slate-900" x-text="receiptOrder ? receiptOrder.order_number : ''"></span>
                     </div>
                 </div>
@@ -556,8 +636,8 @@
                 </div>
 
                 <!-- Async Job Banner -->
-                <div class="mt-4 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] text-emerald-800 flex items-center gap-2">
-                    <span>📨</span>
+                <div class="mt-4 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-emerald-600"></i>
                     <span>Queued job dispatched: <strong>SendOrderConfirmationJob</strong> (Email logged to <code>laravel.log</code>)</span>
                 </div>
             </div>
@@ -565,12 +645,14 @@
             <!-- Modal Action Buttons -->
             <div class="mt-6 flex space-x-3">
                 <button type="button" @click="window.print()"
-                        class="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold">
-                    🖨️ Print Receipt
+                        class="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print Receipt</span>
                 </button>
                 <button type="button" @click="showReceiptModal = false; resetForm();"
-                        class="flex-1 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-semibold">
-                    Done / New Order
+                        class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Done / New Order</span>
                 </button>
             </div>
         </div>
@@ -742,7 +824,7 @@
                             if (data.found && data.customer) {
                                 this.customer.name = data.customer.name;
                                 this.customerFound = true;
-                                this.customerStatus = 'Existing Customer ✓';
+                                this.customerStatus = 'Existing Customer';
                             }
                         } else {
                             this.customerFound = false;
