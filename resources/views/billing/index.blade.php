@@ -59,13 +59,13 @@
 
             <!-- Quick Navigation Pills -->
             <div class="flex items-center space-x-2 text-xs">
-                <button @click="activeTab = 'pos'" :class="activeTab === 'pos' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                <button @click="switchTab('pos')" :class="activeTab === 'pos' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
                     <i class="fa-solid fa-cart-shopping mr-1.5"></i> POS Billing
                 </button>
-                <button @click="activeTab = 'history'" :class="activeTab === 'history' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                <button @click="switchTab('history')" :class="activeTab === 'history' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
                     <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Customer History API
                 </button>
-                <button @click="activeTab = 'concurrency'" :class="activeTab === 'concurrency' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
+                <button @click="switchTab('concurrency')" :class="activeTab === 'concurrency' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'" class="px-3 py-1.5 rounded-lg transition flex items-center">
                     <i class="fa-solid fa-bolt mr-1.5"></i> Concurrency Tester (Req #7)
                 </button>
             </div>
@@ -436,39 +436,68 @@
                         <i class="fa-solid fa-clock-rotate-left text-slate-600"></i> Customer Order History (Requirement #3)
                     </h2>
                     <p class="text-xs text-slate-500 mb-4">
-                        Search customer orders by email address to fetch item breakdowns and historical purchases.
+                        Search customer orders in real-time by email, customer name, or order number.
                     </p>
                     <div class="flex gap-2">
                         <div class="relative flex-1">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
-                                <i class="fa-regular fa-envelope"></i>
+                                <i x-show="!historyLoading" class="fa-solid fa-magnifying-glass"></i>
+                                <i x-show="historyLoading" class="fa-solid fa-circle-notch fa-spin text-emerald-600"></i>
                             </div>
-                            <input type="email" x-model="historySearchEmail" placeholder="e.g. thomas@example.com"
+                            <input type="text"
+                                   x-model="historySearchEmail"
+                                   @input.debounce.300ms="onLiveSearch()"
                                    @keydown.enter.prevent="fetchOrderHistory()"
-                                   class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                   placeholder="Live search by email, name, or order #..."
+                                   class="w-full pl-8 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <button type="button"
+                                    x-show="historySearchEmail"
+                                    @click="clearHistorySearch()"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-xs"
+                                    title="Clear search">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
                         </div>
                         <button type="button" @click="fetchOrderHistory()"
                                 class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                            <span>Search Orders</span>
+                            <span>Search</span>
                         </button>
+                    </div>
+
+                    <!-- Quick search chips -->
+                    <div class="mt-2.5 flex items-center gap-1.5 flex-wrap text-xs text-slate-500">
+                        <span class="font-medium text-slate-600 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt text-amber-500 text-[11px]"></i> Quick filter:
+                        </span>
+                        <button type="button" @click="quickSearch('thomas@example.com')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition">thomas@example.com</button>
+                        <button type="button" @click="quickSearch('testing@gmail.com')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition">testing@gmail.com</button>
+                        <button type="button" @click="quickSearch('akilmurugan2002@gmail.com')" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 transition">akilmurugan2002@gmail.com</button>
+                        <button type="button" @click="clearHistorySearch()" class="px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium transition">All Orders</button>
                     </div>
                 </div>
 
                 <div x-show="historyLoading" class="py-8 text-center text-sm text-slate-500">
-                    <i class="fa-solid fa-circle-notch fa-spin text-emerald-600 mr-2 text-base"></i> Loading customer orders...
+                    <i class="fa-solid fa-circle-notch fa-spin text-emerald-600 mr-2 text-base"></i> Searching orders...
                 </div>
 
-                <div x-show="historyError" class="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 flex items-center gap-2">
-                    <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
+                <div x-show="historyError" class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-amber-600"></i>
                     <span x-text="historyError"></span>
+                </div>
+
+                <!-- Empty state when no orders found -->
+                <div x-show="!historyLoading && (!historyOrders || historyOrders.length === 0) && !historyError" class="py-10 text-center text-slate-400">
+                    <i class="fa-solid fa-box-open text-3xl mb-2 text-slate-300"></i>
+                    <p class="text-sm font-medium text-slate-600">No orders found</p>
+                    <p class="text-xs text-slate-400 mt-1">Try another email, customer name, or order number.</p>
                 </div>
 
                 <div x-show="historyOrders && historyOrders.length > 0 && !historyLoading" class="mt-6 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <div>
-                            <h3 class="font-bold text-slate-900 flex items-center gap-1.5" x-text="historyCustomer ? historyCustomer.name : ''"></h3>
-                            <p class="text-xs text-slate-500" x-text="historyCustomer ? historyCustomer.email : ''"></p>
+                            <h3 class="font-bold text-slate-900 flex items-center gap-1.5" x-text="historyCustomer ? historyCustomer.name : (historySearchEmail ? 'Search Results' : 'Recent Store Orders')"></h3>
+                            <p class="text-xs text-slate-500" x-text="historyCustomer ? historyCustomer.email : (historySearchEmail ? 'Showing orders matching \"' + historySearchEmail + '\"' : 'Showing latest orders')"></p>
                         </div>
                         <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-semibold"
                               x-text="(historyOrders ? historyOrders.length : 0) + ' Total Orders'"></span>
@@ -478,9 +507,13 @@
                         <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/50 hover:bg-slate-50 transition">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
-                                    <span class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                                    <span class="font-bold text-slate-900 text-sm flex items-center gap-1.5 flex-wrap">
                                         <i class="fa-solid fa-receipt text-slate-400"></i>
                                         <span x-text="order.order_number"></span>
+                                        <template x-if="order.customer">
+                                            <span class="text-xs font-normal text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-full ml-1"
+                                                  x-text="order.customer.name + ' · ' + order.customer.email"></span>
+                                        </template>
                                     </span>
                                     <span class="text-xs text-slate-400 block mt-0.5" x-text="new Date(order.created_at).toLocaleString()"></span>
                                 </div>
@@ -1037,20 +1070,83 @@
                     this.recalculate();
                 },
 
-                // Customer Order History methods
-                async fetchOrderHistory() {
-                    if (!this.historySearchEmail) return;
+                switchTab(tab) {
+                    this.activeTab = tab;
+                    if (tab === 'history' && (!this.historyOrders || this.historyOrders.length === 0) && !this.historyLoading) {
+                        this.loadInitialHistory();
+                    }
+                },
+
+                // Customer Order History methods (Live Search & Requirement #3)
+                async onLiveSearch() {
+                    const q = (this.historySearchEmail || '').trim();
+                    if (!q) {
+                        await this.loadInitialHistory();
+                        return;
+                    }
+                    await this.fetchOrderHistory();
+                },
+
+                async quickSearch(email) {
+                    this.historySearchEmail = email;
+                    await this.fetchOrderHistory();
+                },
+
+                clearHistorySearch() {
+                    this.historySearchEmail = '';
+                    this.historyError = '';
+                    this.loadInitialHistory();
+                },
+
+                async loadInitialHistory() {
                     this.historyLoading = true;
                     this.historyError = '';
-                    this.historyOrders = [];
+                    this.historyCustomer = null;
+                    try {
+                        const res = await fetch(`${window.__BASE}/api/orders`);
+                        const data = await res.json();
+                        if (res.ok) {
+                            this.historyOrders = data.data || [];
+                        } else {
+                            this.historyError = data.message || 'Failed to load orders.';
+                        }
+                    } catch (e) {
+                        this.historyError = 'Error: ' + e.message;
+                    } finally {
+                        this.historyLoading = false;
+                    }
+                },
+
+                async fetchOrderHistory() {
+                    const q = (this.historySearchEmail || '').trim();
+                    if (!q) {
+                        await this.loadInitialHistory();
+                        return;
+                    }
+                    this.historyLoading = true;
+                    this.historyError = '';
                     this.historyCustomer = null;
 
                     try {
-                        const res = await fetch(`${window.__BASE}/api/customers/${encodeURIComponent(this.historySearchEmail)}/orders`);
+                        // If user entered a specific email address, call Requirement #3 endpoint: /api/customers/{email}/orders
+                        if (q.includes('@')) {
+                            const res = await fetch(`${window.__BASE}/api/customers/${encodeURIComponent(q)}/orders`);
+                            const data = await res.json();
+                            if (res.ok) {
+                                this.historyOrders = data.data || [];
+                                this.historyCustomer = data.customer || null;
+                                return;
+                            }
+                        }
+
+                        // Real-time live search across orders (order number, customer name, email, phone)
+                        const res = await fetch(`${window.__BASE}/api/orders?search=${encodeURIComponent(q)}`);
                         const data = await res.json();
                         if (res.ok) {
-                            this.historyOrders = data.data;
-                            this.historyCustomer = data.customer;
+                            this.historyOrders = data.data || [];
+                            if (this.historyOrders.length === 0) {
+                                this.historyError = `No orders found matching "${q}".`;
+                            }
                         } else {
                             this.historyError = data.message || 'Customer orders not found.';
                         }

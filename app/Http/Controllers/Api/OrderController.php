@@ -34,13 +34,23 @@ class OrderController extends Controller
     }
 
     /**
-     * List orders, optionally filtered by customer email.
+     * List orders, optionally filtered by customer email or search query.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Order::with(['customer', 'items.product'])->latest();
 
-        if ($email = $request->query('customer_email')) {
+        if ($search = $request->query('search')) {
+            $term = strtolower(trim($search));
+            $query->where(function ($q) use ($term) {
+                $q->where('order_number', 'like', "%{$term}%")
+                    ->orWhereHas('customer', function ($cq) use ($term) {
+                        $cq->where('email', 'like', "%{$term}%")
+                            ->orWhere('name', 'like', "%{$term}%")
+                            ->orWhere('phone', 'like', "%{$term}%");
+                    });
+            });
+        } elseif ($email = $request->query('customer_email')) {
             $query->whereHas('customer', function ($q) use ($email) {
                 $q->where('email', strtolower(trim($email)));
             });
