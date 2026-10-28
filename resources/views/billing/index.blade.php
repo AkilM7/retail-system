@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <!-- App base URL (resolved by Laravel so it works in any subdirectory) -->
+    <script>window.__BASE = '{{ rtrim(url('/'), '/') }}';</script>
     <style>
         [x-cloak] { display: none !important; }
         @media print {
@@ -867,7 +869,7 @@
                     }
 
                     try {
-                        const res = await fetch(`/api/customers/${encodeURIComponent(email)}`);
+                        const res = await fetch(`${window.__BASE}/api/customers/${encodeURIComponent(email)}`);
                         if (res.ok) {
                             const data = await res.json();
                             if (data.found && data.customer) {
@@ -954,7 +956,7 @@
                     };
 
                     try {
-                        const response = await fetch('/api/orders', {
+                        const response = await fetch(window.__BASE + '/api/orders', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1005,7 +1007,7 @@
 
                 async refreshCatalog() {
                     try {
-                        const res = await fetch('/api/products');
+                        const res = await fetch(window.__BASE + '/api/products');
                         if (res.ok) {
                             const data = await res.json();
                             this.catalog = data.data;
@@ -1017,7 +1019,7 @@
 
                 async fetchLowStock() {
                     try {
-                        const res = await fetch(`/api/products/low-stock?threshold=${this.lowStockThreshold}`);
+                        const res = await fetch(`${window.__BASE}/api/products/low-stock?threshold=${this.lowStockThreshold}`);
                         if (res.ok) {
                             const data = await res.json();
                             this.lowStockProducts = data.data;
@@ -1044,7 +1046,7 @@
                     this.historyCustomer = null;
 
                     try {
-                        const res = await fetch(`/api/customers/${encodeURIComponent(this.historySearchEmail)}/orders`);
+                        const res = await fetch(`${window.__BASE}/api/customers/${encodeURIComponent(this.historySearchEmail)}/orders`);
                         const data = await res.json();
                         if (res.ok) {
                             this.historyOrders = data.data;
@@ -1067,7 +1069,7 @@
 
                 async resetRiceStock() {
                     // Quick seed reset for demo
-                    await fetch('/api/products');
+                    await fetch(window.__BASE + '/api/products');
                     location.reload();
                 },
 
@@ -1088,13 +1090,13 @@
                         items: [{ product_id: rice.id, quantity: 1 }]
                     };
 
-                    const req1Promise = fetch('/api/orders', {
+                    const req1Promise = fetch(window.__BASE + '/api/orders', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(payload1)
                     }).then(async r => ({ status: r.status, data: await r.json() }));
 
-                    const req2Promise = fetch('/api/orders', {
+                    const req2Promise = fetch(window.__BASE + '/api/orders', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                         body: JSON.stringify(payload2)
