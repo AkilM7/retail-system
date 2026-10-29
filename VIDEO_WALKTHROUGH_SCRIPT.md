@@ -8,7 +8,7 @@ Use this script as your guide while recording your 5–10 minute screen video wi
 ## ⏱️ Minute 0:00 – 1:00: Introduction & Overview
 - **Action:** Open your browser to `http://127.0.0.1:8000`.
 - **Narration:**
-  > *"Hello Mallow Technologies hiring team. My name is Akil Murugan, and this is my submission for the Laravel Developer Round 1 Mini Task: Store Order & Inventory Mini-System.*
+  > *"Hello Mallow Technologies hiring team. My name is Akil M, and this is my submission for the Laravel Developer Round 1 Mini Task: Store Order & Inventory Mini-System.*
   >
   > *In this walkthrough, I will demonstrate how all functional requirements and edge cases are met, including our normalized database schema, thin controllers with service layer architecture, queued asynchronous email processing, concurrency-safe inventory deduction, our test suite, and the interactive retail billing UI matching your wireframe reference."*
 
